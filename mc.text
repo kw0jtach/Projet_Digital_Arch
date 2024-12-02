@@ -1,0 +1,123 @@
+library ieee;
+use ieee.STD_LOGIC_1164.ALL;
+use ieee.STD_LOGIC_ARITH.ALL;
+use ieee.STD_LOGIC_UNSIGNED.ALL;
+
+entity MixColumns is
+    Port (
+        state_in  : in  STD_LOGIC_VECTOR(127 downto 0);
+        state_out : out STD_LOGIC_VECTOR(127 downto 0) 
+    );
+end MixColumns;
+
+architecture Behavioral of MixColumns is
+
+    component LUT_mul2 is
+        Port (
+            byte_in  : in  STD_LOGIC_VECTOR(7 downto 0);
+            byte_out : out STD_LOGIC_VECTOR(7 downto 0)
+        );
+    end component;
+
+    component LUT_mul3 is
+        Port (
+            byte_in  : in  STD_LOGIC_VECTOR(7 downto 0);
+            byte_out : out STD_LOGIC_VECTOR(7 downto 0)
+        );
+    end component;
+
+    signal mul2_result : STD_LOGIC_VECTOR(7 downto 0);
+    signal mul3_result : STD_LOGIC_VECTOR(7 downto 0);
+
+    signal byte_mul2 : STD_LOGIC_VECTOR(7 downto 0);
+    signal byte_mul3 : STD_LOGIC_VECTOR(7 downto 0);
+
+    signal index       : INTEGER range 0 to 15;
+    type ByteArray is array (0 to 15) of STD_LOGIC_VECTOR(7 downto 0);
+    signal xor_result : ByteArray;
+
+begin
+    LUT2_inst : LUT_mul2
+        Port map(byte_in => byte_mul2, byte_out => mul2_result);
+
+    LUT3_inst : LUT_mul3
+        Port map(byte_in => byte_mul3, byte_out => mul3_result);
+
+    process(state_in, mul2_result, mul3_result)
+    begin
+
+                    byte_mul2 <= state_in(127 downto 120);
+                    byte_mul3 <= state_in(119 downto 112);
+                    xor_result(0) <= mul2_result xor mul3_result xor state_in(111 downto 104) xor state_in(103 downto 96);
+
+                    byte_mul2 <= state_in(119 downto 112);
+                    byte_mul3 <= state_in(111 downto 104);
+                    xor_result(1) <= state_in(127 downto 120) xor mul2_result xor mul3_result xor state_in(103 downto 96);
+
+                    byte_mul2 <= state_in(111 downto 104);
+                    byte_mul3 <= state_in(103 downto 96);
+                    xor_result(2) <= state_in(127 downto 120) xor state_in(111 downto 104) xor mul2_result xor mul3_result;
+
+                    byte_mul3 <= state_in(127 downto 120);
+                    byte_mul2 <= state_in(103 downto 96);
+                    xor_result(3) <= mul3_result xor state_in(119 downto 112) xor state_in(111 downto 104) xor mul2_result;
+
+                    byte_mul2 <= state_in(95 downto 88);
+                    byte_mul3 <= state_in(87 downto 80);
+                    xor_result(4) <= mul2_result xor mul3_result xor state_in(79 downto 72) xor state_in(71 downto 64);
+
+                    byte_mul2 <= state_in(87 downto 80);
+                    byte_mul3 <= state_in(79 downto 72);
+                    xor_result(5) <= state_in(95 downto 88) xor mul2_result xor mul3_result xor state_in(71 downto 64);
+
+                    byte_mul2 <= state_in(79 downto 72);
+                    byte_mul3 <= state_in(71 downto 64);
+                    xor_result(6) <= state_in(95 downto 88) xor state_in(87 downto 80) xor mul2_result xor mul3_result;
+
+                    byte_mul3 <= state_in(95 downto 88);
+                    byte_mul2 <= state_in(71 downto 64);
+                    xor_result(7) <= mul3_result xor state_in(87 downto 80) xor state_in(79 downto 72) xor mul2_result;
+
+
+                    byte_mul2 <= state_in(63 downto 56);
+                    byte_mul3 <= state_in(55 downto 48);
+                    xor_result(8) <= mul2_result xor mul3_result xor state_in(47 downto 40) xor state_in(39 downto 32);
+
+                    byte_mul2 <= state_in(55 downto 48);
+                    byte_mul3 <= state_in(47 downto 40);
+                    xor_result(9) <= state_in(63 downto 56) xor mul2_result xor mul3_result xor state_in(39 downto 32);
+
+                    byte_mul2 <= state_in(47 downto 40);
+                    byte_mul3 <= state_in(39 downto 32);
+                    xor_result(10) <= state_in(63 downto 56) xor state_in(55 downto 48) xor mul2_result xor mul3_result;
+
+                    byte_mul3 <= state_in(63 downto 56);
+                    byte_mul2 <= state_in(39 downto 32);
+                    xor_result(11) <= mul3_result xor state_in(55 downto 48) xor state_in(47 downto 40) xor mul2_result;
+
+                    byte_mul2 <= state_in(31 downto 24);
+                    byte_mul3 <= state_in(23 downto 16);
+                    xor_result(12) <= mul2_result xor mul3_result xor state_in(15 downto 8) xor state_in(7 downto 0);
+
+                    byte_mul2 <= state_in(23 downto 16);
+                    byte_mul3 <= state_in(15 downto 8);
+                    xor_result(13) <= state_in(31 downto 24) xor mul2_result xor mul3_result xor state_in(7 downto 0);
+
+                    byte_mul2 <= state_in(15 downto 8);
+                    byte_mul3 <= state_in(7 downto 0);
+                    xor_result(14) <= state_in(31 downto 24) xor state_in(23 downto 16) xor mul2_result xor mul3_result;
+
+                    byte_mul3 <= state_in(31 downto 24);
+                    byte_mul2 <= state_in(7 downto 0);
+                    xor_result(15) <= mul3_result xor state_in(23 downto 16) xor state_in(15 downto 8) xor mul2_result;
+
+            end case;
+        end loop;
+
+        state_out <= xor_result(0) & xor_result(1) & xor_result(2) & xor_result(3) &
+                     xor_result(4) & xor_result(5) & xor_result(6) & xor_result(7) &
+                     xor_result(8) & xor_result(9) & xor_result(10) & xor_result(11) &
+                     xor_result(12) & xor_result(13) & xor_result(14) & xor_result(15);
+    end process;
+
+end Behavioral;

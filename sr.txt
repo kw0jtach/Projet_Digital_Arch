@@ -1,0 +1,45 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity SR is 
+    port(
+        input_data : in std_logic_vector(127 downto 0);
+        output_data : out std_logic_vector(127 downto 0)
+    );
+end entity;
+
+architecture arch of SR is
+   -- signal first_row : std_logic_vector(31 downto 0);
+   -- signal second_row : std_logic_vector(31 downto 0);
+   -- signal third_row : std_logic_vector(31 downto 0);
+   -- signal fourth_row : std_logic_vector(31 downto 0);
+   -- signal second_row_after_shift : std_logic_vector(31 downto 0);
+   -- signal third_row_after_shift : std_logic_vector(31 downto 0);
+   -- signal fourth_row_after_shift : std_logic_vector(31 downto 0);
+
+
+    begin
+       -- first_row <= input_data(127 downto 120) & input_data(95 downto 88) & input_data(63 downto 56) & input_data(31 downto 24);
+       -- second_row <= input_data(119 downto 112) & input_data(87 downto 80) & input_data(55 downto 48) & input_data(23 downto 16);
+       -- third_row <= input_data(111 downto 104) & input_data(79 downto 72) & input_data(47 downto 40) & input_data(15 downto 8);
+       -- fourth_row <= input_data(103 downto 96) & input_data(71 downto 64) & input_data(39 downto 32) & input_data(7 downto 0);
+
+       -- second_row_after_shift <= second_row(23 downto 0) & second_row(31 downto 24);
+       -- third_row_after_shift <= third_row(15 downto 0) & third_row(31 downto 16);
+       -- fourth_row_after_shift <= fourth_row(7 downto 0) & fourth_row(31 downto 8);
+
+       -- output_data <= first_row(31 downto 24) & second_row_after_shift(31 downto 24) & third_row_after_shift(31 downto 24) & fourth_row_after_shift(31 downto 24) &
+       --                   first_row(23 downto 16) & second_row_after_shift(23 downto 16) & third_row_after_shift(23 downto 16) & fourth_row_after_shift(23 downto 16) &
+       --                   first_row(15 downto 8) & second_row_after_shift(15 downto 8) & third_row_after_shift(15 downto 8) & fourth_row_after_shift(15 downto 8) &
+       --                   first_row(7 downto 0) & second_row_after_shift(7 downto 0) & third_row_after_shift(7 downto 0) & fourth_row_after_shift(7 downto 0);
+
+        output_data <- input_data(127 downto 120) & input_data(87 downto 80) & input_data(47 downto 40) & input_data(7 downto 0) &
+                        input_data(95 downto 88) & input_data(55 downto 48) & input_data(15 downto 8) & input_data(103 downto 96) &
+                        input_data(63 downto 56) & input_data(23 downto 16) & input_data(111 downto 104) & input_data(71 downto 64) &
+                        input_data(31 downto 24) & input_data(119 downto 112) & input_data(79 downto 72) & input_data(39 downto 32);
+
+
+
+
+end architecture;
+            
