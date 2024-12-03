@@ -24,8 +24,6 @@ architecture sim of AES_tb is
     signal ciphertext    : std_logic_vector(127 downto 0);
     signal done          : std_logic;
 
-    constant clk_period : time := 10 ns;
-
 begin
 
     AES_inst : AES
@@ -48,10 +46,10 @@ begin
 
         rst <= '1';
         plaintext <= x"6BC1BEE22E409F96E93D7E117393172A";
-        wait for clk_period * 2;
+        wait for 7 ns;
 
         rst <= '0';
-        --wait for 500 ns;
+
         
 
         wait until done = '1';
@@ -60,6 +58,7 @@ begin
     end process;
 
 end architecture;
+
 
 
 

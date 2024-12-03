@@ -91,7 +91,7 @@ begin
                     key_index <= key_index +1 ;
                     current_key <= round_keys(key_index +1);
                 else
-                    ciphertext <= ark_input;
+                    ciphertext <= ark_to_sb;
                     encryption_done <= '1';
                 end if;
             end if;
