@@ -32,56 +32,14 @@ architecture arch of MC is
     signal mix_result : ByteArray;
 
 begin
-
-    state_bytes(0)  <= state_in(127 downto 120);
-    state_bytes(1)  <= state_in(119 downto 112);
-    state_bytes(2)  <= state_in(111 downto 104);
-    state_bytes(3)  <= state_in(103 downto 96);
-    state_bytes(4)  <= state_in(95 downto 88);
-    state_bytes(5)  <= state_in(87 downto 80);
-    state_bytes(6)  <= state_in(79 downto 72);
-    state_bytes(7)  <= state_in(71 downto 64);
-    state_bytes(8)  <= state_in(63 downto 56);
-    state_bytes(9)  <= state_in(55 downto 48);
-    state_bytes(10) <= state_in(47 downto 40);
-    state_bytes(11) <= state_in(39 downto 32);
-    state_bytes(12) <= state_in(31 downto 24);
-    state_bytes(13) <= state_in(23 downto 16);
-    state_bytes(14) <= state_in(15 downto 8);
-    state_bytes(15) <= state_in(7 downto 0);
-
-    LUT2_inst_0 : LUT_mul2 Port map(byte_in => state_bytes(0), byte_out => mul2(0));
-    LUT3_inst_0 : LUT_mul3 Port map(byte_in => state_bytes(0), byte_out => mul3(0));
-    LUT2_inst_1 : LUT_mul2 Port map(byte_in => state_bytes(1), byte_out => mul2(1));
-    LUT3_inst_1 : LUT_mul3 Port map(byte_in => state_bytes(1), byte_out => mul3(1));
-    LUT2_inst_2 : LUT_mul2 Port map(byte_in => state_bytes(2), byte_out => mul2(2));
-    LUT3_inst_2 : LUT_mul3 Port map(byte_in => state_bytes(2), byte_out => mul3(2));
-    LUT2_inst_3 : LUT_mul2 Port map(byte_in => state_bytes(3), byte_out => mul2(3));
-    LUT3_inst_3 : LUT_mul3 Port map(byte_in => state_bytes(3), byte_out => mul3(3));
-    LUT2_inst_4 : LUT_mul2 Port map(byte_in => state_bytes(4), byte_out => mul2(4));
-    LUT3_inst_4 : LUT_mul3 Port map(byte_in => state_bytes(4), byte_out => mul3(4));
-    LUT2_inst_5 : LUT_mul2 Port map(byte_in => state_bytes(5), byte_out => mul2(5));
-    LUT3_inst_5 : LUT_mul3 Port map(byte_in => state_bytes(5), byte_out => mul3(5));
-    LUT2_inst_6 : LUT_mul2  Port map(byte_in => state_bytes(6), byte_out => mul2(6));
-    LUT3_inst_6 : LUT_mul3 Port map(byte_in => state_bytes(6), byte_out => mul3(6));
-    LUT2_inst_7 : LUT_mul2 Port map(byte_in => state_bytes(7), byte_out => mul2(7));
-    LUT3_inst_7 : LUT_mul3 Port map(byte_in => state_bytes(7), byte_out => mul3(7));
-    LUT2_inst_8 : LUT_mul2 Port map(byte_in => state_bytes(8), byte_out => mul2(8));
-    LUT3_inst_8 : LUT_mul3 Port map(byte_in => state_bytes(8), byte_out => mul3(8));
-    LUT2_inst_9 : LUT_mul2 Port map(byte_in => state_bytes(9), byte_out => mul2(9));
-    LUT3_inst_9 : LUT_mul3 Port map(byte_in => state_bytes(9), byte_out => mul3(9));
-    LUT2_inst_10 : LUT_mul2 Port map(byte_in => state_bytes(10), byte_out => mul2(10));
-    LUT3_inst_10 : LUT_mul3 Port map(byte_in => state_bytes(10), byte_out => mul3(10));
-    LUT2_inst_11 : LUT_mul2 Port map(byte_in => state_bytes(11), byte_out => mul2(11));
-    LUT3_inst_11 : LUT_mul3 Port map(byte_in => state_bytes(11), byte_out => mul3(11));
-    LUT2_inst_12 : LUT_mul2 Port map(byte_in => state_bytes(12), byte_out => mul2(12));
-    LUT3_inst_12 : LUT_mul3 Port map(byte_in => state_bytes(12), byte_out => mul3(12));
-    LUT2_inst_13 : LUT_mul2 Port map(byte_in => state_bytes(13), byte_out => mul2(13));
-    LUT3_inst_13 : LUT_mul3 Port map(byte_in => state_bytes(13), byte_out => mul3(13));
-    LUT2_inst_14 : LUT_mul2 Port map(byte_in => state_bytes(14), byte_out => mul2(14));
-    LUT3_inst_14 : LUT_mul3 Port map(byte_in => state_bytes(14), byte_out => mul3(14));
-    LUT2_inst_15 : LUT_mul2 Port map(byte_in => state_bytes(15), byte_out => mul2(15));
-    LUT3_inst_15 : LUT_mul3 Port map(byte_in => state_bytes(15), byte_out => mul3(15));
+    gen_state_bytes : for i in 0 to 15 generate
+        state_bytes(i) <= state_in(127 - 8*i downto 120 - 8*i);
+    end generate gen_state_bytes;
+    
+    gen_lut : for i in 0 to 15 generate
+        LUT2_inst : LUT_mul2 Port map(byte_in => state_bytes(i), byte_out => mul2(i));
+        LUT3_inst : LUT_mul3 Port map(byte_in => state_bytes(i), byte_out => mul3(i));
+    end generate gen_lut;
 
     mix_result(0)  <= mul2(0) xor mul3(1) xor state_bytes(2) xor state_bytes(3);
     mix_result(1)  <= state_bytes(0) xor mul2(1) xor mul3(2) xor state_bytes(3);

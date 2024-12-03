@@ -16,7 +16,7 @@ architecture archTB of SRtb is
     end component;
 
 begin
-    SR_comp : SR port map (input_data => input_data, output_data => output_data);
+    SR_comp : SR port map (input_dataa => input_data, output_dataa => output_data);
     srprocess : process
     begin
         input_data <= x"090862BF6F28E3042C747FEEDA4A6A47";
