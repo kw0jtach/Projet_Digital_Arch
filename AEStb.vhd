@@ -75,7 +75,7 @@ begin
                 when others => null;
             end case;
 
-            wait for 20 ns;
+            wait for 10 ns;
         end loop;
 
         wait;

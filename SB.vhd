@@ -15,10 +15,6 @@ architecture arch of SB is
                byte_out: out std_logic_vector(7 downto 0));
     end component;
     
-    signal byte_in : std_logic_vector(7 downto 0);
-    signal byte_out : std_logic_vector(7 downto 0);
-
-
     begin
         gen : for i in 0 to 15 generate
             S_Box_i : S_box port map(byte_in => input_data((8*i)+7 downto 8*i), byte_out => output_data((8*i)+7 downto 8*i));

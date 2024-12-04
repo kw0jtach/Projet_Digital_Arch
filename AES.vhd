@@ -14,7 +14,7 @@ end entity;
 
 architecture arch of AES is
     type KeyArray is array (0 to 10) of std_logic_vector(127 downto 0);
-    constant round_keys : KeyArray := (
+    signal round_keys : KeyArray := (
         x"2b7e151628aed2a6abf7158809cf4f3c", 
         x"a0fafe1788542cb123a339392a6c7605",  
         x"f2c295f27a96b9435935807a7359f67f",  
@@ -59,8 +59,8 @@ architecture arch of AES is
     
     signal ark_input, ark_to_sb, sb_to_sr,sr_to_mc, mc_to_ark : std_logic_vector(127 downto 0);
     signal current_key : std_logic_vector(127 downto 0);
-    signal key_index : integer range 0 to 10 := 0;
-    signal encryption_done : std_logic := '0';
+    signal key_index : integer range 0 to 10;
+    signal encryption_done : std_logic;
     
 
 begin
@@ -76,7 +76,6 @@ begin
             current_key <= round_keys(0);
             ark_input <= plaintext;
             encryption_done <= '0';
-            ciphertext <= (others => '0');
         elsif rising_edge(clk) then
             if encryption_done = '0' then
                 if key_index < 10 then
@@ -86,14 +85,12 @@ begin
                         ark_input <= mc_to_ark;
                     end if;
                     
-                    ciphertext <= ark_to_sb;
-                    
                     key_index <= key_index +1 ;
                     current_key <= round_keys(key_index +1);
                 else
-                    ciphertext <= ark_to_sb;
                     encryption_done <= '1';
                 end if;
+                ciphertext <= ark_to_sb;
             end if;
         end if;
      end process;
