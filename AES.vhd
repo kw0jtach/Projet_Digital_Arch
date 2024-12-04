@@ -8,25 +8,13 @@ entity AES is
         rst           : in std_logic;
         plaintext    : in std_logic_vector(127 downto 0);
         ciphertext   : out std_logic_vector(127 downto 0);
+        key_TT          : out std_logic_vector(127 downto 0);
+        round_cnt_TT    : out std_logic_vector(3 downto 0);
         done          : out std_logic
     );
 end entity;
 
 architecture arch of AES is
-    type KeyArray is array (0 to 10) of std_logic_vector(127 downto 0);
-    signal round_keys : KeyArray := (
-        x"2b7e151628aed2a6abf7158809cf4f3c", 
-        x"a0fafe1788542cb123a339392a6c7605",  
-        x"f2c295f27a96b9435935807a7359f67f",  
-        x"3d80477d4716fe3e1e237e446d7a883b",  
-        x"ef44a541a8525b7fb671253bdb0bad00",  
-        x"d4d1c6f87c839d87caf2b8bc11f915bc",  
-        x"6d88a37a110b3efddbf98641ca0093fd",  
-        x"4e54f70e5f5fc9f384a64fb24ea6dc4f",  
-        x"ead27321b58dbad2312bf5607f8d292f",
-        x"ac7766f319fadc2128d12941575c006e", 
-        x"d014f9a8c9ee2589e13f0cc8b6630ca6"   
-    );
 
     component ARK
         port (
@@ -56,44 +44,69 @@ architecture arch of AES is
             state_out : out std_logic_vector(127 downto 0)
         );
     end component;
-    
-    signal ark_input, ark_to_sb, sb_to_sr,sr_to_mc, mc_to_ark : std_logic_vector(127 downto 0);
-    signal current_key : std_logic_vector(127 downto 0);
-    signal key_index : integer range 0 to 10;
-    signal encryption_done : std_logic;
-    
 
+    component PIPO_Register
+        generic(N: integer);
+        port(
+            Clk: in std_logic;
+            D: in std_logic_vector(N - 1 downto 0);
+            Q: out std_logic_vector(N - 1 downto 0)
+        );
+    end component;
+
+    component Multiplexer
+        generic(N: integer);
+        port(
+        D0 : in std_logic_vector(N - 1 downto 0); -- select 0
+        D1 : in std_logic_vector(N - 1 downto 0); -- select 1
+        SEL : in std_logic;
+        Q : out std_logic_vector(N - 1 downto 0)
+        );
+    end component;
+
+    component RoundKeys
+        port(
+            round_cnt : in std_logic_vector(3 downto 0);
+            key : out std_logic_vector(127 downto 0)
+        );
+    end component;
+
+    signal input_mux_out, reg_out, key_out, ARK_out, SB_out, SR_out, MC_out, output_mux_out: std_logic_vector(127 downto 0);
+    signal round_cnt: std_logic_vector(3 downto 0);
+    signal last_round: std_logic;
+   
 begin
-    ark_inst : ARK port map(input_data => ark_input, key => current_key, output_data => ark_to_sb);
-    sb_inst : SB port map(input_data => ark_to_sb, output_data=> sb_to_sr);
-    sr_inst : SR port map(input_dataa => sb_to_sr, output_dataa => sr_to_mc);
-    mc_inst : MC port map(state_in => sr_to_mc, state_out => mc_to_ark);
-    
+    entry_mux: Multiplexer generic map(N => 128) port map(D0 => output_mux_out, D1 => plaintext, SEL => rst, Q => input_mux_out);
+    reg_inst: PIPO_Register generic map(N => 128) port map(Clk => clk, D => input_mux_out, Q => reg_out);
+    round_keys_inst: RoundKeys port map(round_cnt => round_cnt, key => key_out);
+    ark_inst: ARK port map(input_data => reg_out, key => key_out, output_data => ARK_out);  
+    sb_inst: SB port map(input_data => ARK_out, output_data => SB_out);
+    sr_inst: SR port map(input_dataa => SB_out, output_dataa => SR_out);
+    mc_inst: MC port map(state_in => SR_out, state_out => MC_out);
+    output_mux: Multiplexer generic map(N => 128) port map(D0 => MC_out, D1 => SR_out, SEL => last_round, Q => output_mux_out);
+
     process(clk, rst)
     begin
-        if rst = '1' then
-            key_index <= 0;
-            current_key <= round_keys(0);
-            ark_input <= plaintext;
-            encryption_done <= '0';
-        elsif rising_edge(clk) then
-            if encryption_done = '0' then
-                if key_index < 10 then
-                    if key_index = 9 then
-                        ark_input <= sr_to_mc;
-                    else
-                        ark_input <= mc_to_ark;
-                    end if;
-                    
-                    key_index <= key_index +1 ;
-                    current_key <= round_keys(key_index +1);
-                else
-                    encryption_done <= '1';
+        if (rising_edge(clk)) then
+            key_TT <= key_out;
+            round_cnt_TT <= round_cnt;
+            if rst = '1' then
+                done <= '0';
+                last_round <= '0';
+                round_cnt <= "0000";
+            else 
+                ciphertext <= ARK_out;
+                if unsigned(round_cnt) < 10 then
+                    round_cnt <= std_logic_vector(unsigned(round_cnt) + 1);
                 end if;
-                ciphertext <= ark_to_sb;
+                if unsigned(round_cnt) = 8 then
+                    last_round <= '1';
+                end if;
+                if unsigned(round_cnt) = 10 then
+                    done <= '1';
+                end if;
             end if;
         end if;
-     end process;
+    end process;
 
-     done <= encryption_done;
-end architecture;
+end arch ; -- arch    
