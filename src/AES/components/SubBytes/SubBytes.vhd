@@ -2,14 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 
-entity SB is 
+entity SubBytes is 
     port(
         input_data : in std_logic_vector(127 downto 0);
         output_data : out std_logic_vector(127 downto 0)
     );
 end entity;
 
-architecture arch of SB is
+architecture arch of SubBytes is
     component S_box is
         port( byte_in : in std_logic_vector(7 downto 0);
                byte_out: out std_logic_vector(7 downto 0));

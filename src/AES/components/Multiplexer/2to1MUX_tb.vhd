@@ -1,10 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity muxtb is
+entity mux_tb is
 end entity;
 
-architecture archTB of muxtb is 
+architecture archTB of mux_tb is 
 
     component Multiplexer is 
     generic(N: integer);

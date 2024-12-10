@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;  
 
-entity ARK is 
+entity AddRoundKey is 
     port (
         input_data : in std_logic_vector(127 downto 0);
         key : in std_logic_vector(127 downto 0);
@@ -9,7 +9,7 @@ entity ARK is
     );
 end entity;
 
-architecture arch of ARK is
+architecture arch of AddRoundKey is
     begin
         output_data <= input_data xor key;
 end architecture;

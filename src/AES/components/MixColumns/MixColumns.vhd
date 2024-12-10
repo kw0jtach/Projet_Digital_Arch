@@ -3,14 +3,14 @@ use ieee.STD_LOGIC_1164.ALL;
 use ieee.STD_LOGIC_ARITH.ALL;
 use ieee.STD_LOGIC_UNSIGNED.ALL;
 
-entity MC is
+entity MixColumns is
     Port (
         state_in  : in  STD_LOGIC_VECTOR(127 downto 0);
         state_out : out STD_LOGIC_VECTOR(127 downto 0)
     );
 end entity;
 
-architecture arch of MC is
+architecture arch of MixColumns is
     component LUT_mul2 is
         Port (
             byte_in  : in  STD_LOGIC_VECTOR(7 downto 0);
