@@ -7,12 +7,6 @@ entity AES is
         clk           : in std_logic;
         rst           : in std_logic;
         plaintext     : in std_logic_vector(127 downto 0);
-        SubBytes_tt         : out std_logic_vector(127 downto 0);
-        ShiftRows_tt         : out std_logic_vector(127 downto 0);
-        MixColumns_tt         : out std_logic_vector(127 downto 0);
-        AddRoundKey_tt        : out std_logic_vector(127 downto 0);
-        key_TT        : out std_logic_vector(127 downto 0);
-        round_cnt_TT  : out std_logic_vector(3 downto 0);
         ciphertext    : out std_logic_vector(127 downto 0);
         done          : out std_logic
     );
@@ -122,7 +116,6 @@ begin
                 done_int <= '0';
                 last_round <= '0';
                 round_cnt <= (others => '0');
-                round_cnt_TT <= (others => '0');
                 ciphertext <= (others => '0');
             elsif rst_sync = '0' then
                 if done_int = '1' then
@@ -141,13 +134,6 @@ begin
                         done_int <= '1';
                         ciphertext <= AddRoundKey_out;
                     end if;
-
-                    key_TT <= key_out;
-                    AddRoundKey_tt <= AddRoundKey_out;
-                    round_cnt_TT <= round_cnt;
-                    SubBytes_tt <= SubBytes_out;
-                    ShiftRows_tt <= ShiftRows_out;
-                    MixColumns_tt <= MixColumns_out;
                 end if;
             end if;
         end if;

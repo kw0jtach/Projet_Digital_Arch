@@ -11,7 +11,7 @@ architecture behavior of TB_Anode_Activate_SEG is
       CLK_100MHZ : in std_logic;
       anode_out : out std_logic_vector(3 downto 0);
       seg_out : out std_logic_vector(6 downto 0);
-      done_in : in std_logic;
+      done_in : in std_logic
     );
   end component;
 
@@ -29,7 +29,7 @@ begin
       CLK_100MHZ => CLK_100MHZ,
       anode_out => anode_out,
       seg_out => seg_out,
-      done_in => done_in,
+      done_in => done_in
     );
 
   clk_process : process

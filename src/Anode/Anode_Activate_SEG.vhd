@@ -32,7 +32,7 @@ begin
             anode_out <= "0111";
             seg_out <= "1111111";
             if done_in = '1' then 
-                seg_out <= "0100000";
+                seg_out <= "0001000";
             end if;
             
         when "01" => 

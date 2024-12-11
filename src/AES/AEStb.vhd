@@ -13,12 +13,6 @@ architecture sim of AES_tb is
         clk           : in std_logic;
         rst           : in std_logic;
         plaintext     : in std_logic_vector(127 downto 0);
-        SubBytes_tt         : out std_logic_vector(127 downto 0);
-        ShiftRows_tt         : out std_logic_vector(127 downto 0);
-        MixColumns_tt         : out std_logic_vector(127 downto 0);
-        AddRoundKey_tt        : out std_logic_vector(127 downto 0);
-        key_TT        : out std_logic_vector(127 downto 0);
-        round_cnt_TT  : out std_logic_vector(3 downto 0);
         ciphertext    : out std_logic_vector(127 downto 0);
         done          : out std_logic
     );
@@ -28,8 +22,6 @@ architecture sim of AES_tb is
     signal rst           : std_logic := '0';
     signal plaintext     : std_logic_vector(127 downto 0);
     signal ciphertext    : std_logic_vector(127 downto 0);
-    signal key_TT, ShiftRows_tt, SubBytes_tt, MixColumns_tt, AddRoundKey_tt         : std_logic_vector(127 downto 0);
-    signal round_cnt_TT    : std_logic_vector(3 downto 0);
     signal done          : std_logic;
 
 begin 
@@ -39,12 +31,6 @@ begin
             clk        => clk,
             rst        => rst,
             plaintext  => plaintext,
-            SubBytes_tt => SubBytes_tt,
-            ShiftRows_tt  => ShiftRows_tt,
-            MixColumns_tt  => MixColumns_tt,
-            AddRoundKey_tt => AddRoundKey_tt,
-            key_TT       => key_TT,
-            round_cnt_TT => round_cnt_TT,
             ciphertext => ciphertext,
             done       => done
         );
