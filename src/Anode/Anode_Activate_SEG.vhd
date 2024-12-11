@@ -5,6 +5,8 @@ use ieee.std_logic_unsigned.all;
 entity Anode_Activate_SEG is
   port (
     CLK_100MHZ : in std_logic;
+    BCD_SW : in std_logic_vector(1 downto 0);
+    rst    : in std_logic;
     anode_out : out std_logic_vector(3 downto 0);
     seg_out : out std_logic_vector(6 downto 0);
     done_in : in std_logic
@@ -51,9 +53,20 @@ begin
 
         when "11" => 
             anode_out <= "1110";
-            seg_out <= "1111111";
             if done_in = '1' then 
                 seg_out <= "1010101";
+            end if;
+            
+            if rst = '1' then 
+                if BCD_SW = "00" then
+                    seg_out <= "1000000";
+                elsif BCD_SW = "01" then
+                    seg_out <= "1111001";
+                elsif BCD_SW = "10" then
+                    seg_out <= "0100100";
+                elsif BCD_SW = "11" then
+                    seg_out <= "0110000";
+                end if;
             end if;
 
         when others => 
