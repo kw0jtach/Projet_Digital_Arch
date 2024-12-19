@@ -8,11 +8,11 @@ entity TopModule is
     SEG_OUT : out std_logic_vector(6 downto 0);
     BCD_SW : in std_logic_vector(1 downto 0);
     btnC : in std_logic;
-    btnR : in std_logic;
-    plaintext : out std_logic_vector(127 downto 0);
-    ciphertext : out std_logic_vector(127 downto 0);
-    done : out std_logic;
-    rst : out std_logic
+    btnR : in std_logic
+    -- plaintext : out std_logic_vector(127 downto 0);
+    -- ciphertext : out std_logic_vector(127 downto 0);
+    -- done : out std_logic;
+    -- rst : out std_logic
   ) ;
 end TopModule;
 
@@ -62,7 +62,7 @@ architecture arch of TopModule is
     signal done_signal : std_logic ;
     signal rst_signal : std_logic ;
     signal plaintext_signal : std_logic_vector(127 downto 0) ;
-
+    signal ciphertext : std_logic_vector(127 downto 0) ;
 
 begin
 
@@ -80,8 +80,8 @@ begin
         plaintext_out => plaintext_signal
     );
     
-    plaintext <= plaintext_signal;
-    rst <= rst_signal;
+    -- plaintext <= plaintext_signal;
+    -- rst <= rst_signal;
 
     Anode_Activate_SEG_inst : Anode_Activate_SEG port map (
         CLK_100MHZ => CLK_100MHZ,
@@ -100,6 +100,6 @@ begin
         done => done_signal
     );
     
-    done <= done_signal;
+    -- done <= done_signal;
 
 end arch;

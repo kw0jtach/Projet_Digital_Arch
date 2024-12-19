@@ -9,8 +9,8 @@ set_property -dict { PACKAGE_PIN W5   IOSTANDARD LVCMOS33 } [get_ports CLK_100MH
 
 
 ## Switches
-##set_property -dict { PACKAGE_PIN V17   IOSTANDARD LVCMOS33 } [get_ports {BCD_SW[0]}]
-##set_property -dict { PACKAGE_PIN V16   IOSTANDARD LVCMOS33 } [get_ports {BCD_SW[1]}]
+set_property -dict { PACKAGE_PIN V17   IOSTANDARD LVCMOS33 } [get_ports {BCD_SW[0]}]
+set_property -dict { PACKAGE_PIN V16   IOSTANDARD LVCMOS33 } [get_ports {BCD_SW[1]}]
 ##set_property -dict { PACKAGE_PIN W16   IOSTANDARD LVCMOS33 } [get_ports {BCD_SW[2]}]
 ##set_property -dict { PACKAGE_PIN W17   IOSTANDARD LVCMOS33 } [get_ports {BCD_SW[3]}]
 ##set_property -dict { PACKAGE_PIN W15   IOSTANDARD LVCMOS33 } [get_ports {BCD_SW[4]}]
