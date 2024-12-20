@@ -18,8 +18,6 @@ end TopModule;
 
 architecture arch of TopModule is
 
-    signal start : std_logic ;
-
     component Controller is
     port (
         CLK_100MHZ : in std_logic;
@@ -54,7 +52,7 @@ architecture arch of TopModule is
         clk           : in std_logic;
         rst           : in std_logic;
         plaintext     : in std_logic_vector(127 downto 0);
-        ciphertext    : out std_logic_vector(127 downto 0);
+        --ciphertext    : out std_logic_vector(127 downto 0);
         done          : out std_logic
     );
     end component;
@@ -62,7 +60,7 @@ architecture arch of TopModule is
     signal done_signal : std_logic ;
     signal rst_signal : std_logic ;
     signal plaintext_signal : std_logic_vector(127 downto 0) ;
-    signal ciphertext : std_logic_vector(127 downto 0) ;
+    --signal ciphertext : std_logic_vector(127 downto 0) ;
 
 begin
 
@@ -96,7 +94,7 @@ begin
         clk => CLK_100MHZ,
         rst => rst_signal,
         plaintext => plaintext_signal,
-        ciphertext => ciphertext,
+        --ciphertext => ciphertext,
         done => done_signal
     );
     
