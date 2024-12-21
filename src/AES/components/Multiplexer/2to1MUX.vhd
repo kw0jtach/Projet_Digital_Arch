@@ -4,8 +4,8 @@ use ieee.std_logic_1164.all;
 entity Multiplexer is 
     generic(N: integer);
     port(
-        D0 : in std_logic_vector(N - 1 downto 0); -- select 0
-        D1 : in std_logic_vector(N - 1 downto 0); -- select 1
+        D0 : in std_logic_vector(N - 1 downto 0);
+        D1 : in std_logic_vector(N - 1 downto 0);
         SEL : in std_logic;
         Q : out std_logic_vector(N - 1 downto 0)
     );

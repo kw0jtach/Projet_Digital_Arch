@@ -9,8 +9,8 @@ architecture archTB of mux_tb is
     component Multiplexer is 
     generic(N: integer);
     port(
-        D0 : in std_logic_vector(N - 1 downto 0); -- feedback
-        D1 : in std_logic_vector(N - 1 downto 0); -- plaintext
+        D0 : in std_logic_vector(N - 1 downto 0);
+        D1 : in std_logic_vector(N - 1 downto 0);
         SEL : in std_logic;
         Q : out std_logic_vector(N - 1 downto 0)
     );
